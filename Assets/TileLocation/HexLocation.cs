@@ -30,6 +30,11 @@ namespace TileLocation
             return new Vector2((float)xPos, (float)yPos);
         }
 
+        public static HexLocation FromPixels(float x, float y)
+        {
+            return new HexLocation(0, 0, 0);
+        }
+
         public int ToDistance()
         {
             return (Math.Abs(X) + Math.Abs(Y) + Math.Abs(Z)) / 2;
