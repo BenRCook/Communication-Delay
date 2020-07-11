@@ -29,7 +29,7 @@ namespace Drone
         {
             throw new NotImplementedException();
         }
-
+        
         public void LaserAttack(HexDirection direction)
         {
             throw new NotImplementedException();
