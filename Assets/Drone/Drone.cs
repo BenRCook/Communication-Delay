@@ -1,9 +1,5 @@
-﻿using System;
-using Action;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using TileLocation;
-using UnityEngine;
 
 namespace Drone
 {
@@ -24,6 +20,7 @@ namespace Drone
         private void Start()
         {
             _drones = FindObjectsOfType<AbsDrone>();
+            MoveTo(new HexLocation(-2, -1, +3));
         }
         
         // // Update is called once per frame
@@ -34,6 +31,7 @@ namespace Drone
 
         public override void MoveTo(HexLocation newLocation)
         {
+            Location = newLocation;
             transform.position = newLocation.GetPixelLocation();
         }
 

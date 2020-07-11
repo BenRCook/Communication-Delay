@@ -5,8 +5,10 @@ namespace TileLocation
 {
     public readonly struct HexLocation
     {
-        private const double TileWidth = 1;
-        private const double TileHeight = 1;
+        private const double TileWidth = 0.5;
+        private const double TileHeight = -0.5;
+        private static readonly (double, double, double, double) Orientation = (Math.Sqrt(3), Math.Sqrt(3)/2, 0.0, 1.5);
+
         public HexLocation(int x, int y, int z)
         {
             X = x;
@@ -23,8 +25,8 @@ namespace TileLocation
 
         public Vector2 GetPixelLocation() // returns the unity coordinate of the tile as a Vector2
         {
-            double xPos = ((X - Y) * (TileWidth / 2));
-            double yPos = ((0.5 * (X + Y)) ) * TileHeight;
+            var xPos = (Orientation.Item1 * X + Orientation.Item2 * Z) * TileWidth;
+            var yPos = (Orientation.Item3 * X + Orientation.Item4 * Z) * TileHeight;
             return new Vector2((float)xPos, (float)yPos);
         }
 
