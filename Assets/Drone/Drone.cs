@@ -7,13 +7,8 @@ using UnityEngine;
 
 namespace Drone
 {
-    public class Drone : MonoBehaviour, IDrone
+    public class Drone : AbsDrone
     {
-        [field: SerializeField] public int Health { get; private set; } = 10;
-        [field: SerializeField] public Queue<IAction> Actions { get; } = new Queue<IAction>();
-        [field: SerializeField] public HexDirection Facing { get; private set; } = HexDirection.Right;
-        [field: SerializeField] public HexLocation Location { get; private set; } = new HexLocation(0, 0, 0);
-
         private const int MissileDamage = 10;
         private const int MissileRange = 10;
         private int _missileAmmo = 1;
@@ -22,14 +17,13 @@ namespace Drone
         private const int KineticDamage = 10;
         private const int KineticRange = 3;
 
-        private Drone[] _drones;
+        private AbsDrone[] _drones;
         
 
         // Start is called before the first frame update
-        // TODO Make this work with any IDrone
         private void Start()
         {
-            _drones = FindObjectsOfType<Drone>();
+            _drones = FindObjectsOfType<AbsDrone>();
         }
         
         // // Update is called once per frame
@@ -38,12 +32,12 @@ namespace Drone
         //
         // }
 
-        public void MoveTo(HexLocation newLocation)
+        public override void MoveTo(HexLocation newLocation)
         {
             throw new NotImplementedException();
         }
 
-        public void LaserAttack(HexDirection direction)
+        public override void LaserAttack(HexDirection direction)
         {
             Facing = direction;
             // TODO Animations
@@ -54,7 +48,7 @@ namespace Drone
                 .ForEach(drone => drone.TakeDamage(LaserDamage));
         }
 
-        public void KineticAttack(IDrone target)
+        public override void KineticAttack(AbsDrone target)
         {
             // TODO Animations
             if (target.Location.DistanceFrom(Location) < KineticRange)
@@ -63,7 +57,7 @@ namespace Drone
             }
         }
 
-        public void MissileAttack(IDrone target)
+        public override void MissileAttack(AbsDrone target)
         {
             if (_missileAmmo <= 0) return; // TODO failure animation
 
@@ -74,20 +68,6 @@ namespace Drone
                 target.TakeDamage(MissileDamage);
             }
         }
-
-        public void TakeDamage(int damage)
-        {
-            Health -= damage;
-        }
-
-        public void PushAction(IAction action)
-        {
-            Actions.Enqueue(action);
-        }
-
-        public void TakeNextAction()
-        {
-            Actions.Dequeue().TakeAction(this);
-        }
+        
     }
 }
