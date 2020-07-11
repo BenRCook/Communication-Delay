@@ -6,7 +6,7 @@ namespace Action
     public interface IAction
     {
         string GetDescription();
-        IDrone TakeAction(IDrone drone);
+        void TakeAction(IDrone drone);
         Color GetBackgroundColor();
     }
 }

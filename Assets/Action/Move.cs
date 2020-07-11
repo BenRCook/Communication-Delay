@@ -19,10 +19,9 @@ namespace Action
             return $"Move to {_newPosition}";
         }
 
-        public IDrone TakeAction(IDrone drone)
+        public void TakeAction(IDrone drone)
         {
             drone.MoveTo(_newPosition);
-            return drone;
         }
 
         public Color GetBackgroundColor()

@@ -13,17 +13,17 @@ namespace Drone
         [SerializeField] private Queue<IAction> actions;
         [SerializeField] private HexDirection facing;
 
-        // Start is called before the first frame update
-        void Start()
-        {
-        
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-        
-        }
+        // // Start is called before the first frame update
+        // void Start()
+        // {
+        //
+        // }
+        //
+        // // Update is called once per frame
+        // void Update()
+        // {
+        //
+        // }
 
         public void MoveTo(HexLocation newLocation)
         {
@@ -50,16 +50,6 @@ namespace Drone
             throw new NotImplementedException();
         }
 
-        public bool IsVisibleFrom(HexLocation location, HexDirection direction)
-        {
-            throw new NotImplementedException();
-        }
-
-        public int DistanceFrom(HexLocation location)
-        {
-            throw new NotImplementedException();
-        }
-
         public int GetHealth()
         {
             return health;
@@ -68,6 +58,16 @@ namespace Drone
         public void TakeDamage(int damage)
         {
             health -= damage;
+        }
+
+        public void PushAction(IAction action)
+        {
+            actions.Enqueue(action);
+        }
+
+        public void TakeNextAction()
+        {
+            actions.Dequeue().TakeAction(this);
         }
     }
 }

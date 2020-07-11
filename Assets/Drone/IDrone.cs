@@ -1,4 +1,5 @@
 ﻿using System;
+using Action;
 using TileLocation;
 
 namespace Drone
@@ -10,9 +11,9 @@ namespace Drone
         void KineticAttack(IDrone target);
         void MissileAttack(IDrone target);
         HexLocation GetLocation();
-        bool IsVisibleFrom(HexLocation location, HexDirection direction);
-        int DistanceFrom(HexLocation location);
         int GetHealth();
         void TakeDamage(int damage);
+        void PushAction(IAction action);
+        void TakeNextAction();
     }
 }
