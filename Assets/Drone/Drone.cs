@@ -34,7 +34,7 @@ namespace Drone
 
         public override void MoveTo(HexLocation newLocation)
         {
-            throw new NotImplementedException();
+            transform.position = newLocation.GetPixelLocation();
         }
 
         public override void LaserAttack(HexDirection direction)
