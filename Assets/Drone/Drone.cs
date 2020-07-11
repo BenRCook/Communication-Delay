@@ -8,10 +8,10 @@ namespace Drone
 {
     public class Drone : MonoBehaviour, IDrone
     {
-        [SerializeField] private int health;
-        [SerializeField] private int movementLeft;
-        [SerializeField] private Queue<IAction> actions;
-        [SerializeField] private HexDirection facing;
+        [field: SerializeField] public int Health { get; private set; } = 10;
+        [field: SerializeField] public Queue<IAction> Actions { get; } = new Queue<IAction>();
+        [field: SerializeField] public HexDirection Facing { get; } = HexDirection.Right;
+        [field: SerializeField] public HexLocation Location { get; } = new HexLocation(0, 0, 0);
 
         // // Start is called before the first frame update
         // void Start()
@@ -45,29 +45,19 @@ namespace Drone
             throw new NotImplementedException();
         }
 
-        public HexLocation GetLocation()
-        {
-            throw new NotImplementedException();
-        }
-
-        public int GetHealth()
-        {
-            return health;
-        }
-
         public void TakeDamage(int damage)
         {
-            health -= damage;
+            Health -= damage;
         }
 
         public void PushAction(IAction action)
         {
-            actions.Enqueue(action);
+            Actions.Enqueue(action);
         }
 
         public void TakeNextAction()
         {
-            actions.Dequeue().TakeAction(this);
+            Actions.Dequeue().TakeAction(this);
         }
     }
 }
