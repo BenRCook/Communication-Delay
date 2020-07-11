@@ -18,19 +18,12 @@ namespace Drone
         private AbsDrone[] _drones;
         
 
-        // Start is called before the first frame update
         private void Start()
         {
             _drones = FindObjectsOfType<AbsDrone>();
             MoveTo(new HexLocation(-2, -1, +3));
         }
         
-        // // Update is called once per frame
-        // void Update()
-        // {
-        //
-        // }
-
         public override void MoveTo(HexLocation newLocation)
         {
             Location = newLocation;
