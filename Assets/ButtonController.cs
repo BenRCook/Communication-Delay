@@ -7,28 +7,34 @@ public class ButtonController : MonoBehaviour
 {
     public String currentButton;
 
-    private void OnMouseDown()
+    public void Update()
     {
-        switch (currentButton)
+        if (Input.GetMouseButtonDown(0))
         {
-            case "move":
-                Console.WriteLine("move(" + Input.mousePosition + ")");
-                break;
-            case "missile":
-                Console.WriteLine("Missile(" + Input.mousePosition + ")");
-                break;
-            case "kinetic":
-                Console.WriteLine("Kinetic(" + Input.mousePosition + ")");
-                break;
-            case "lazer":
-                Console.WriteLine("Missile(" + Input.mousePosition + ")");
-                break;
-            default:
-                Console.WriteLine("This Button Does Nothing");
-                break;
+            
+            switch (currentButton)
+            {
+                case "move":
+                    Debug.Log("move(" + Input.mousePosition + ")");
+                    break;
+                case "missile":
+                    Debug.Log("Missile(" + Input.mousePosition + ")");
+                    break;
+                case "kinetic":
+                    Debug.Log("Kinetic(" + Input.mousePosition + ")");
+                    break;
+                case "lazer":
+                    Debug.Log("Missile(" + Input.mousePosition + ")");
+                    break;
+                case "":
+                    Debug.Log("No button is selected / the button has no value");
+                    break;
+                default:
+                    Debug.Log("This Button Does Nothing");
+                    break;
+            }
         }
     }
-
     public void ButtonPress(String buttonType)
     {
         currentButton = buttonType;
