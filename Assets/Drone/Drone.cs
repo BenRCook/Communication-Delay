@@ -1,5 +1,7 @@
 ﻿using System.Linq;
 using TileLocation;
+using UnityEngine;
+using UnityEngine.Tilemaps;
 
 namespace Drone
 {
@@ -33,6 +35,7 @@ namespace Drone
         {
             Location = newLocation;
             transform.position = newLocation.GetPixelLocation();
+           
         }
 
         public override void LaserAttack(HexDirection direction)

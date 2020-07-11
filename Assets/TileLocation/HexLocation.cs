@@ -23,11 +23,11 @@ namespace TileLocation
         // Top to bottom
         private int Z { get; }
 
-        public Vector2 GetPixelLocation() // returns the unity coordinate of the tile as a Vector2
+        public Vector3 GetPixelLocation() // returns the unity coordinate of the tile as a Vector2
         {
-            var xPos = (Orientation.Item1 * X + Orientation.Item2 * Z) * TileWidth;
-            var yPos = (Orientation.Item3 * X + Orientation.Item4 * Z) * TileHeight;
-            return new Vector2((float)xPos, (float)yPos);
+            var xPos = (Z + (0.5 * X));
+            var yPos = (0.75 * X);
+            return new Vector3((float)xPos, (float)yPos, 0f);
         }
 
         public static HexLocation FromPixels(float x, float y)
