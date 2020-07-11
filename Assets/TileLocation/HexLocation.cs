@@ -5,10 +5,6 @@ namespace TileLocation
 {
     public readonly struct HexLocation
     {
-        private const double TileWidth = 0.5;
-        private const double TileHeight = -0.5;
-        private static readonly (double, double, double, double) Orientation = (Math.Sqrt(3), Math.Sqrt(3)/2, 0.0, 1.5);
-
         public HexLocation(int x, int y, int z)
         {
             X = x;
@@ -30,9 +26,31 @@ namespace TileLocation
             return new Vector3((float)xPos, (float)yPos, 0f);
         }
 
-        public static HexLocation FromPixels(float x, float y)
+        public static HexLocation FromPixels(Vector3 position)
         {
-            return new HexLocation(0, 0, 0);
+            var x = (int) Math.Round(position.y / 0.75);
+            var z = (int) Math.Round(position.x - (0.5 * x));
+            var y = -x - z;
+            return new HexLocation(x, y, z);
+        }
+
+        public HexDirection NearestDirection(Vector3 position)
+        {
+            const double angleSize = Math.PI / 3;
+            var angle = VectorToAngle(position);
+            return (HexDirection) (int) Math.Floor(angle / angleSize);
+        }
+
+        private double VectorToAngle(Vector3 position)
+        {
+            const double sectorSize = Math.PI / 2;
+            var currentPos = GetPixelLocation();
+            var difference = position - currentPos;
+            var angle = Math.Atan(Math.Abs(difference.x) / Math.Abs(difference.y));
+            // pi/2 size sectors from top right to top left 0 to 3
+            var sector = ((difference.x < 0 ? 2 : 0) + (difference.y < 0 ? 0 : 2)) % 4;
+            var offset = sector * sectorSize;
+            return sector % 2 == 0 ? offset + angle : offset + sectorSize - angle;
         }
 
         public int ToDistance()
@@ -74,5 +92,9 @@ namespace TileLocation
             new HexLocation(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
         public static HexLocation operator -(HexLocation a, HexLocation b) => 
             new HexLocation(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
+
+        public static Boolean operator ==(HexLocation a, HexLocation b) => 
+            a.X == b.X && a.Y == b.Y && a.Z == b.Z;
+        public static bool operator !=(HexLocation a, HexLocation b) => !(a == b);
     }
 }
