@@ -154,9 +154,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: daf1ba8fb6f83f94c90b4f06d1203479, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 0
-  movementLeft: 0
-  facing: 0
+  <Health>k__BackingField: 0
+  <Facing>k__BackingField: 0
 --- !u!95 &304559641
 Animator:
   serializedVersion: 3
