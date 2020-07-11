@@ -1,4 +1,6 @@
-﻿namespace TileLocation
+﻿using TileLocation;
+
+namespace TileLocation
 {
     public enum HexDirection
     {

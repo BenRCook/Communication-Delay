@@ -8,9 +8,9 @@ namespace Action
     {
         private readonly HexLocation _newPosition;
 
-        public Move(int newX, int newY)
+        public Move(HexLocation location)
         {
-            _newPosition = HexLocation.FromPixels(newX, newY);
+            _newPosition = location;
         }
 
         public string GetDescription()
