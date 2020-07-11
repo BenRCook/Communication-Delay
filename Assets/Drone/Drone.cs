@@ -6,11 +6,10 @@ using UnityEngine;
 
 namespace Drone
 {
-    using HexLocation = Tuple<int, int, int>;
     public class Drone : MonoBehaviour, IDrone
     {
-        [SerializeField] private long health;
-        [SerializeField] private long movementLeft;
+        [SerializeField] private int health;
+        [SerializeField] private int movementLeft;
         [SerializeField] private Queue<IAction> actions;
         [SerializeField] private HexDirection facing;
 
@@ -59,6 +58,16 @@ namespace Drone
         public int DistanceFrom(HexLocation location)
         {
             throw new NotImplementedException();
+        }
+
+        public int GetHealth()
+        {
+            return health;
+        }
+
+        public void TakeDamage(int damage)
+        {
+            health -= damage;
         }
     }
 }

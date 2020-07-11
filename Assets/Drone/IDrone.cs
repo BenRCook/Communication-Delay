@@ -3,7 +3,6 @@ using TileLocation;
 
 namespace Drone
 {
-    using HexLocation = Tuple<int, int, int>;
     public interface IDrone
     {
         void MoveTo(HexLocation newLocation);
@@ -13,5 +12,7 @@ namespace Drone
         HexLocation GetLocation();
         bool IsVisibleFrom(HexLocation location, HexDirection direction);
         int DistanceFrom(HexLocation location);
+        int GetHealth();
+        void TakeDamage(int damage);
     }
 }

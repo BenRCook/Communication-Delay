@@ -1,15 +1,17 @@
 ﻿using System;
+using Drone;
+using TileLocation;
 using UnityEngine;
 
 namespace Action
 {
     public class Move : IAction
     {
-        private Tuple<int,int,int> _newPosition;
+        private readonly HexLocation _newPosition;
 
         public Move(int newX, int newY, int newZ)
         {
-            _newPosition = Tuple.Create(newX, newY, newZ);
+            _newPosition = new HexLocation(newX, newY, newZ);
         }
 
         public string GetDescription()
@@ -17,14 +19,15 @@ namespace Action
             return $"Move to {_newPosition}";
         }
 
-        public Drone.Drone TakeAction(Drone.Drone drone)
+        public IDrone TakeAction(IDrone drone)
         {
-            throw new System.NotImplementedException();
+            drone.MoveTo(_newPosition);
+            return drone;
         }
 
         public Color GetBackgroundColor()
         {
-            throw new System.NotImplementedException();
+             return new Color(0, 255, 0, 0.7F);
         }
     }
 }

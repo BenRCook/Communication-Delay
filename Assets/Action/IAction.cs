@@ -1,11 +1,12 @@
-﻿using UnityEngine;
+﻿using Drone;
+using UnityEngine;
 
 namespace Action
 {
     public interface IAction
     {
         string GetDescription();
-        Drone.Drone TakeAction(Drone.Drone drone);
+        IDrone TakeAction(IDrone drone);
         Color GetBackgroundColor();
     }
 }
