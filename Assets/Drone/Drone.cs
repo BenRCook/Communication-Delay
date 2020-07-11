@@ -21,7 +21,7 @@ namespace Drone
         private void Start()
         {
             _drones = FindObjectsOfType<AbsDrone>();
-            MoveTo(new HexLocation(-2, -1, +3));
+            // MoveTo(new HexLocation(-2, -1, +3));
         }
         
         public override void MoveTo(HexLocation newLocation)
@@ -63,6 +63,7 @@ namespace Drone
                 target.TakeDamage(MissileDamage);
             }
         }
+        
         
     }
 }
