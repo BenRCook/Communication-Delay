@@ -24,13 +24,13 @@ public class ButtonController : MonoBehaviour
                     Debug.Log("Kinetic(" + Input.mousePosition + ")");
                     break;
                 case "lazer":
-                    Debug.Log("Missile(" + Input.mousePosition + ")");
+                    Debug.Log("lazer(" + Input.mousePosition + ")");
                     break;
                 case "":
-                    Debug.Log("No button is selected / the button has no value");
+                    Debug.Log("No button is selected / the button has no value, " + currentButton);
                     break;
                 default:
-                    Debug.Log("This Button Does Nothing");
+                    Debug.Log("This button has not been implemented");
                     break;
             }
         }
