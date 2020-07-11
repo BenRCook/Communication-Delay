@@ -28,7 +28,7 @@ namespace TileLocation
 
         public int ToDistance()
         {
-            return Math.Abs(X) + Math.Abs(Y) + Math.Abs(Z);
+            return (Math.Abs(X) + Math.Abs(Y) + Math.Abs(Z)) / 2;
         }
 
         public int DistanceFrom(HexLocation other)
