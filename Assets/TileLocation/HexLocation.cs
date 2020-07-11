@@ -1,9 +1,12 @@
 ﻿using System;
+using UnityEngine;
 
 namespace TileLocation
 {
     public readonly struct HexLocation
     {
+        private const double TileWidth = 1;
+        private const double TileHeight = 1;
         public HexLocation(int x, int y, int z)
         {
             X = x;
@@ -18,12 +21,11 @@ namespace TileLocation
         // Top to bottom
         private int Z { get; }
 
-        public (int, int) GetPixelLocation()
+        public Vector2 GetPixelLocation() // returns the unity coordinate of the tile as a Vector2
         {
-            const int radius = 50;
-            var x = Math.Sqrt(3.0) * radius * (Z / 2 + X);
-            double y = 3 / 2 * radius * Z;
-            return ((int, int)) (x, y);
+            double xPos = ((X - Y) * (TileWidth / 2));
+            double yPos = ((0.5 * (X + Y)) ) * TileHeight;
+            return new Vector2((float)xPos, (float)yPos);
         }
 
         public int ToDistance()

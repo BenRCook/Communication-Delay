@@ -27,7 +27,7 @@ namespace Drone
 
         public void MoveTo(HexLocation newLocation)
         {
-            throw new NotImplementedException();
+            transform.position = newLocation.GetPixelLocation();
         }
         
         public void LaserAttack(HexDirection direction)
