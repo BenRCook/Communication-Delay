@@ -19,7 +19,7 @@ namespace Action
             return $"Move to {_newPosition}";
         }
 
-        public void TakeAction(IDrone drone)
+        public void TakeAction(AbsDrone drone)
         {
             drone.MoveTo(_newPosition);
         }

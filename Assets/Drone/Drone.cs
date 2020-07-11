@@ -1,73 +1,73 @@
 ﻿using System;
 using Action;
 using System.Collections.Generic;
+using System.Linq;
 using TileLocation;
 using UnityEngine;
 
 namespace Drone
 {
-    public class Drone : MonoBehaviour, IDrone
+    public class Drone : AbsDrone
     {
-        [SerializeField] private int health;
-        [SerializeField] private int movementLeft;
-        [SerializeField] private Queue<IAction> actions;
-        [SerializeField] private HexDirection facing;
+        private const int MissileDamage = 10;
+        private const int MissileRange = 10;
+        private int _missileAmmo = 1;
+        private const int LaserDamage = 10;
+        private const int LaserRange = 10;
+        private const int KineticDamage = 10;
+        private const int KineticRange = 3;
 
-        // // Start is called before the first frame update
-        // void Start()
-        // {
-        //
-        // }
-        //
+        private AbsDrone[] _drones;
+        
+
+        // Start is called before the first frame update
+        private void Start()
+        {
+            _drones = FindObjectsOfType<AbsDrone>();
+        }
+        
         // // Update is called once per frame
         // void Update()
         // {
         //
         // }
 
-        public void MoveTo(HexLocation newLocation)
+        public override void MoveTo(HexLocation newLocation)
         {
             transform.position = newLocation.GetPixelLocation();
         }
+
+        public override void LaserAttack(HexDirection direction)
+        {
+            Facing = direction;
+            // TODO Animations
+            _drones
+                .Where(drone => drone.Location.IsVisibleFrom(Location, direction))
+                .Where(drone => drone.Location.DistanceFrom(Location) < LaserRange)
+                .ToList()
+                .ForEach(drone => drone.TakeDamage(LaserDamage));
+        }
+
+        public override void KineticAttack(AbsDrone target)
+        {
+            // TODO Animations
+            if (target.Location.DistanceFrom(Location) < KineticRange)
+            {
+                target.TakeDamage(KineticDamage);
+            }
+        }
+
+        public override void MissileAttack(AbsDrone target)
+        {
+            if (_missileAmmo <= 0) return; // TODO failure animation
+
+            // TODO Animations
+            _missileAmmo -= 1;
+            if (target.Location.DistanceFrom(Location) < MissileRange)
+            {
+                target.TakeDamage(MissileDamage);
+            }
+        }
         
-        public void LaserAttack(HexDirection direction)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void KineticAttack(IDrone target)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void MissileAttack(IDrone target)
-        {
-            throw new NotImplementedException();
-        }
-
-        public HexLocation GetLocation()
-        {
-            throw new NotImplementedException();
-        }
-
-        public int GetHealth()
-        {
-            return health;
-        }
-
-        public void TakeDamage(int damage)
-        {
-            health -= damage;
-        }
-
-        public void PushAction(IAction action)
-        {
-            actions.Enqueue(action);
-        }
-
-        public void TakeNextAction()
-        {
-            actions.Dequeue().TakeAction(this);
-        }
     }
 }
