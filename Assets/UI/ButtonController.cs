@@ -7,7 +7,7 @@ namespace UI
     public delegate IAction ActionCreator(Vector3 worldPoint);
     public class ButtonController : MonoBehaviour
     {
-        [SerializeField] private string currentButton;
+        [field: SerializeField] public string CurrentButton { get; private set; }
         private Camera _mainCamera;
         private IAction _nextAction;
 
@@ -34,22 +34,22 @@ namespace UI
         {
             if (!Input.GetMouseButtonDown(0)) return;
             var controller = GameController.Instance;
-            switch (currentButton)
+            switch (CurrentButton)
             {
                 case "move":
-                    currentButton = "";
+                    CurrentButton = "";
                     AttemptCreate(ActionBuilder.MakeMove);
                     break;
                 case "missile":
-                    currentButton = "";
+                    CurrentButton = "";
                     AttemptCreate(ActionBuilder.MakeMissileAttack);
                     break;
                 case "kinetic":
-                    currentButton = "";
+                    CurrentButton = "";
                     AttemptCreate(ActionBuilder.MakeKineticAttack);
                     break;
                 case "lazer":
-                    currentButton = "";
+                    CurrentButton = "";
                     var worldPoint = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
                     Action = new LaserAttack(controller.PlayerDrone.Location.NearestDirection(worldPoint));
                     break;
@@ -73,7 +73,7 @@ namespace UI
         public void NextTurn()
         {
             var controller = GameController.Instance;
-            currentButton = "";
+            CurrentButton = "";
             ErrorDisplay.Instance.Message = "";
             if (controller.CurrentDrone == controller.PlayerDrone)
             {
@@ -102,7 +102,7 @@ namespace UI
         
         public void ButtonPress(string buttonType)
         {
-            currentButton = buttonType;
+            CurrentButton = buttonType;
         }
         
         private void Awake()
