@@ -24,8 +24,8 @@ namespace TileLocation
         public static readonly Dictionary<HexDirection, HexLocation> DirectionMappings = 
             new Dictionary<HexDirection, HexLocation>
             {
-                [HexDirection.TopRight] = new HexLocation(1, -1, 0),
-                [HexDirection.Right] = new HexLocation(1, 0, -1),
+                [HexDirection.TopRight] = new HexLocation(1, 0, -1),
+                [HexDirection.Right] = new HexLocation(1, -1, 0),
                 [HexDirection.BottomRight] = new HexLocation(0, -1, 1),
                 [HexDirection.BottomLeft] = new HexLocation(-1, 0, 1),
                 [HexDirection.Left] = new HexLocation(-1, 1, 0),
@@ -52,19 +52,16 @@ namespace TileLocation
         {
             const double angleSize = Math.PI / 3;
             var angle = VectorToAngle(position);
-            return (HexDirection) (int) Math.Floor(angle / angleSize);
+            var direction = (HexDirection) (int) Math.Floor(angle / angleSize);
+            return direction;
         }
 
         private double VectorToAngle(Vector3 position)
         {
-            const double sectorSize = Math.PI / 2;
             var currentPos = GetPixelLocation();
-            var difference = position - currentPos;
-            var angle = Math.Atan(Math.Abs(difference.x) / Math.Abs(difference.y));
-            // pi/2 size sectors from top right to top left 0 to 3
-            var sector = ((difference.x < 0 ? 2 : 0) + (difference.y < 0 ? 0 : 2)) % 4;
-            var offset = sector * sectorSize;
-            return sector % 2 == 0 ? offset + angle : offset + sectorSize - angle;
+            var angle =  Math.PI - Mathf.Atan2(position.y - currentPos.y, position.x - currentPos.x);
+            var adjusted = (angle + 1.5 * Math.PI) % (2 * Math.PI);
+            return adjusted;
         }
 
         private int ToDistance()

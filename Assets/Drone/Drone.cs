@@ -1,5 +1,8 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using TileLocation;
+using UI;
+using UnityEngine;
 
 namespace Drone
 {
@@ -12,6 +15,31 @@ namespace Drone
         private const int LaserRange = 10;
         private const int KineticDamage = 10;
         private const int KineticRange = 3;
+
+        private LineRenderer _laser;
+        private Camera _mainCamera;
+
+        private void Start()
+        {
+            _laser = GetComponent<LineRenderer>();
+            _mainCamera = Camera.main;
+        }
+
+        private void Update()
+        {
+            if (ButtonController.Instance.currentButton == "lazer")
+            {
+                _laser.enabled = true;
+                var worldPoint = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
+                var aim = Location.DrawLineTo(worldPoint, LaserRange);
+                _laser.SetPosition(0, Location.GetPixelLocation());
+                _laser.SetPosition(1, aim.GetPixelLocation());
+            }
+            else
+            {
+                _laser.enabled = false;
+            }
+        }
 
         public override void MoveTo(HexLocation newLocation)
         {
