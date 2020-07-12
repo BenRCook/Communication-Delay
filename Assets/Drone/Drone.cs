@@ -18,7 +18,7 @@ namespace Drone
         
         private const int MissileDamage = 10;
         private const int MissileRange = 10;
-        private int _missileAmmo = 3;
+        public int MissileAmmo { get; set; } = 3;
         private const int LaserDamage = 10;
         private const int LaserRange = 10;
         private const int KineticDamage = 10;
@@ -51,16 +51,10 @@ namespace Drone
 
         public override void MissileAttack(AbsDrone target)
         {
-            if (_missileAmmo <= 0) return;
-
-            _missileAmmo -= 1;
             if (target.Location.DistanceFrom(Location) < MissileRange)
             {
                 target.TakeDamage(MissileDamage);
             }
-
-            GameObject.Find("Missile Button").GetComponentInChildren<Text>().text = "Missile (" + _missileAmmo + ")";
-            
         }
 
         public override void TakeTurn()

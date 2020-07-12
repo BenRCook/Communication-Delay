@@ -1,6 +1,7 @@
 using Action;
 using Common;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace UI
 {
@@ -63,6 +64,9 @@ namespace UI
             {
                 Action = creator(worldPoint);
                 ErrorDisplay.Instance.Message = "";
+                if (Action.GetDescription() != "Missile" || GameController.Instance.PlayerDrone.MissileAmmo > 0) return;
+                Action = null;
+                ErrorDisplay.Instance.Message = "Out of missiles!";
             }
             catch (UserInputError e)
             {
@@ -92,6 +96,12 @@ namespace UI
             {
                 ErrorDisplay.Instance.Message = "Choose an action before advancing turn";
                 return;
+            }
+            if (Action.GetDescription() == "Missile")
+            {
+                controller.PlayerDrone.MissileAmmo -= 1;
+                GameObject.Find("Missile Button").GetComponentInChildren<Text>().text =
+                    $"Missile ({controller.PlayerDrone.MissileAmmo})";
             }
             controller.PlayerDrone.PushAction(Action);
             Action = null;
