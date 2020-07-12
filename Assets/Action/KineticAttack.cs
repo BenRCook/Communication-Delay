@@ -19,7 +19,7 @@ namespace Action
 
         public void TakeAction(AbsDrone drone)
         {
-            drone.MissileAttack(_target);
+            drone.KineticAttack(_target);
         }
 
         public Color GetBackgroundColor()

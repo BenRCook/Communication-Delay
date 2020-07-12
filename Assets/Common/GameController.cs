@@ -11,8 +11,9 @@ namespace Common
     {
         [SerializeField] protected GameObject playerDronePrefab;
         [SerializeField] protected GameObject enemyDronePrefab;
+        [SerializeField] protected GameObject deathParticlePrefab;
         [SerializeField] private int turnCounter;
-
+        
         public static GameController Instance { get; private set; }
 
         public Queue<AbsDrone> Drones { get; private set; } = new Queue<AbsDrone>();
@@ -87,6 +88,15 @@ namespace Common
             {
                 AdvanceTurn();
             }
+        }
+
+        public void Kill(AbsDrone drone)
+        {
+            var particleLocation = drone.Location.GetPixelLocation();
+            Drones = new Queue<AbsDrone>(Drones.Where(d => d != drone));
+            
+            Destroy(drone.gameObject);
+            Instantiate(deathParticlePrefab, particleLocation, Quaternion.identity);
         }
     }
 }
