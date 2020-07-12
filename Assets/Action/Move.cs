@@ -1,5 +1,4 @@
-﻿using System;
-using Drone;
+﻿using Drone;
 using TileLocation;
 using UnityEngine;
 
@@ -9,20 +8,19 @@ namespace Action
     {
         private readonly HexLocation _newPosition;
 
-        public Move(int newX, int newY, int newZ)
+        public Move(HexLocation location)
         {
-            _newPosition = new HexLocation(newX, newY, newZ);
+            _newPosition = location;
         }
 
         public string GetDescription()
         {
-            return $"Move to {_newPosition}";
+            return $"Move drone";
         }
 
-        public IDrone TakeAction(IDrone drone)
+        public void TakeAction(AbsDrone drone)
         {
             drone.MoveTo(_newPosition);
-            return drone;
         }
 
         public Color GetBackgroundColor()
