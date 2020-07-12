@@ -10,7 +10,7 @@ namespace Drone
     {
         [field: SerializeField] public override Queue<IAction> Actions { get; } = new Queue<IAction>(new []
         {
-            new Wait(), new Wait(), new Wait(),
+            new Wait(), new Wait(),
         });
         
         private const int MissileDamage = 10;

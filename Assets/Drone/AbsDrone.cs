@@ -18,43 +18,13 @@ namespace Drone
         
 
         public abstract void MoveTo(HexLocation newLocation);
-        public void QueueMove(Vector3 mouseLocation)
-        {
-            var hex = HexLocation.FromPixels(mouseLocation);
-            if (!Utilities.Instance.IsTileWalkable(hex))
-                throw new UserInputError("Tile is inaccessible!");
-            PushAction(new Move(hex));
-        }
 
         public abstract void LaserAttack(HexDirection direction);
-        public void QueueLaserAttack(Vector3 mouseLocation)
-        {
-            PushAction(new LaserAttack(Location.NearestDirection(mouseLocation)));
-        }
 
         public abstract void KineticAttack(AbsDrone target);
-        public void QueueKineticAttack(Vector3 mouseLocation)
-        {
-            var tile = HexLocation.FromPixels(mouseLocation);
-            var drone = Utilities.FindDroneOnTile(tile);
-            if (drone is null)
-            {
-                throw new UserInputError("Drone not found on that tile");
-            }
-            PushAction(new KineticAttack(drone));
-        }
-        
+
         public abstract void MissileAttack(AbsDrone target);
-        public void QueueMissileAttack(Vector3 mouseLocation)
-        {
-            var tile = HexLocation.FromPixels(mouseLocation);
-            var drone = Utilities.FindDroneOnTile(tile);
-            if (drone is null)
-            {
-                throw new UserInputError("Drone not found on that tile");
-            }
-            PushAction(new MissileAttack(drone));
-        }
+        
 
         public void TakeDamage(int damage)
         {

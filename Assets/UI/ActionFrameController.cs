@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Mime;
-using Action;
+﻿using Action;
+using Common;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,7 +7,7 @@ namespace UI
 {
     public class ActionFrameController : MonoBehaviour
     {
-        private IAction[] Actions;
+        private IAction[] _actions;
 
         public Text actionText1;
         public Text actionText2;
@@ -19,24 +17,14 @@ namespace UI
         
         public void UpdateFrames()
         {
-            Actions = GameController.GameController.Instance.PlayerDrone.Actions.ToArray();
-            actionText1.text = Actions[0].GetDescription();
-            actionText2.text = Actions[1].GetDescription();
-            actionText3.text = Actions[2].GetDescription();
+            _actions = GameController.Instance.PlayerDrone.Actions.ToArray();
+            actionText1.text = ButtonController.Instance.NextAction;
+            actionText2.text = _actions[1].GetDescription();
+            actionText3.text = _actions[0].GetDescription();
         }
 
         private void Start()
         {
-            // actionFrames = new GameObject[]
-            // {
-            //     GameObject.Find("Action Frame 1"), GameObject.Find("Action Frame 2"), GameObject.Find("Action Frame 3")
-            // };
-            // actionTexts = new Text[]
-            // {
-            //     GameObject.Find("Action Frame 1").GetComponentInChildren<Text>(),
-            //     GameObject.Find("Action Frame 2").GetComponentInChildren<Text>(),
-            //     GameObject.Find("Action Frame 3").GetComponentInChildren<Text>()
-            // };
             actionText1 = GameObject.Find("Action Frame 1").GetComponentInChildren<Text>();
             actionText2 = GameObject.Find("Action Frame 2").GetComponentInChildren<Text>();
             actionText3 = GameObject.Find("Action Frame 3").GetComponentInChildren<Text>();
@@ -54,16 +42,5 @@ namespace UI
             }
         }
 
-        
-
-        // public void Update()
-        // {
-        //     if (Input.GetMouseButtonDown(0))
-        //     {
-        //         UpdateFrames();
-        //         Debug.Log("update");
-        //     }
-        //     
-        // }
     }
 }
