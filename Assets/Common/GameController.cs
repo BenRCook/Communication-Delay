@@ -75,11 +75,17 @@ namespace Common
             Drones.Enqueue(CurrentDrone);
 
             // Spawn enemy sometimes
-            if (CurrentDrone != PlayerDrone) return;
-            turnCounter += 1;
-            if (turnCounter > 10 || turnCounter > 5 && turnCounter % 2 == 0 || turnCounter < 5 && turnCounter % 3 == 0)
+            if (CurrentDrone == PlayerDrone)
             {
-                SpawnEnemy();
+                turnCounter += 1;
+                if (turnCounter > 10 || turnCounter > 5 && turnCounter % 2 == 0 || turnCounter < 5 && turnCounter % 3 == 0)
+                {
+                    SpawnEnemy();
+                }
+            }
+            else
+            {
+                AdvanceTurn();
             }
         }
     }
