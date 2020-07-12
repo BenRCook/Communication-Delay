@@ -7,9 +7,10 @@ namespace Enemy
     public class EnemyDrone : AbsDrone
     {
         private const int LaserDamage = 10;
-        private const int LaserRange = 10;
+        public static int LaserRange { get; } = 10;
         private const int KineticDamage = 10;
-        private const int KineticRange = 3;
+        public static int KineticRange { get; } = 3;
+        public static int MoveLimit { get; } = 3;
 
         private AbsDrone[] _drones;
 
@@ -27,7 +28,6 @@ namespace Enemy
         public override void LaserAttack(HexDirection direction)
         {
             Facing = direction;
-            // TODO Animations
             _drones
                 .Where(drone => drone.Location.IsVisibleFrom(Location, direction))
                 .Where(drone => drone.Location.DistanceFrom(Location) < LaserRange)
@@ -37,7 +37,6 @@ namespace Enemy
 
         public override void KineticAttack(AbsDrone target)
         {
-            // TODO Animations
             if (target.Location.DistanceFrom(Location) < KineticRange)
             {
                 target.TakeDamage(KineticDamage);

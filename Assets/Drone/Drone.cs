@@ -35,7 +35,6 @@ namespace Drone
         {
             _drones = FindObjectsOfType<AbsDrone>();
             Facing = direction;
-            // TODO Animations
             _drones
                 .Where(drone => drone.Location.IsVisibleFrom(Location, direction))
                 .Where(drone => drone.Location.DistanceFrom(Location) < LaserRange)
@@ -45,7 +44,6 @@ namespace Drone
 
         public override void KineticAttack(AbsDrone target)
         {
-            // TODO Animations
             if (target.Location.DistanceFrom(Location) < KineticRange)
             {
                 target.TakeDamage(KineticDamage);
@@ -54,9 +52,8 @@ namespace Drone
 
         public override void MissileAttack(AbsDrone target)
         {
-            if (_missileAmmo <= 0) return; // TODO failure animation
+            if (_missileAmmo <= 0) return;
 
-            // TODO Animations
             _missileAmmo -= 1;
             if (target.Location.DistanceFrom(Location) < MissileRange)
             {
