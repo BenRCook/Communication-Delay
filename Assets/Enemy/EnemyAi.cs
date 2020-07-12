@@ -1,30 +1,39 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Action;
 using Drone;
+using GameController;
 using TileLocation;
 using UnityEngine;
 
 namespace Enemy
 {
-    public class EnemyAi : MonoBehaviour
+    public class EnemyAi : MonoBehaviour, IDroneAi
     {
-        private static IAction ChooseAction(AbsDrone drone)
+        private bool _chasing;
+
+
+        public IAction ChooseAction(AbsDrone drone)
         {
-            var drones = FindObjectsOfType<Drone.Drone>();
+            var drones = new List<Drone.Drone>{GameController.GameController.Instance.PlayerDrone};
             var close = drones
-                .First(other => other.Location.DistanceFrom(drone.Location) <= EnemyDrone.KineticRange);
+                .FirstOrDefault(other => other.Location.DistanceFrom(drone.Location) <= EnemyDrone.KineticRange);
+            
             if (!(close is null))
             {
+                _chasing = false;
                 return new KineticAttack(close);
             }
 
             var inLine = drones
                 .Where(other => CanSeeAnyDirection(drone.Location, other.Location))
-                .First(other => drone.Location.DistanceFrom(other.Location) < EnemyDrone.LaserRange);
-            if (!(inLine is null))
+                .FirstOrDefault(other => drone.Location.DistanceFrom(other.Location) < EnemyDrone.LaserRange);
+            
+            if (!(inLine is null) && ! _chasing)
             {
+                _chasing = true;
                 return new LaserAttack(DirectionTo(drone.Location, inLine.Location));
             }
 
@@ -52,11 +61,6 @@ namespace Enemy
                 }
             }
             throw new InvalidDataException("Cannot see target!");
-        }
-
-        public static void AddAction(EnemyDrone drone)
-        {
-            drone.PushAction(ChooseAction(drone));
         }
     }
 }

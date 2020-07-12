@@ -4,7 +4,7 @@ using TileLocation;
 
 namespace Enemy
 {
-    public class EnemyDrone : AbsDrone
+    public class EnemyDrone : AbsAiDrone
     {
         private const int LaserDamage = 10;
         public static int LaserRange { get; } = 10;
@@ -12,11 +12,9 @@ namespace Enemy
         public static int KineticRange { get; } = 3;
         public static int MoveLimit { get; } = 3;
 
-        private AbsDrone[] _drones;
-
         private void Start()
         {
-            _drones = FindObjectsOfType<AbsDrone>();
+            droneAi = gameObject.AddComponent<EnemyAi>();
         }
         
         public override void MoveTo(HexLocation newLocation)
@@ -28,7 +26,7 @@ namespace Enemy
         public override void LaserAttack(HexDirection direction)
         {
             Facing = direction;
-            _drones
+            GameController.GameController.Instance.Drones
                 .Where(drone => drone.Location.IsVisibleFrom(Location, direction))
                 .Where(drone => drone.Location.DistanceFrom(Location) < LaserRange)
                 .ToList()

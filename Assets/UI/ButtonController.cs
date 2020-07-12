@@ -8,52 +8,45 @@ namespace UI
 {
     public class ButtonController : MonoBehaviour
     {
-        public String currentButton;
-        private Drone.Drone drone;
-
-        public void Awake()
-        {
-            drone = FindObjectOfType<Drone.Drone>();
-        }
-
+        public string currentButton;
+        
         public void Update()
         {
-            if (Input.GetMouseButtonDown(0))
+            if (!Input.GetMouseButtonDown(0)) return;
+            var controller = GameController.GameController.Instance;
+            var worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            switch (currentButton)
             {
-                var worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                switch (currentButton)
-                {
-                    case "move":
-                        Debug.Log("move(" + Input.mousePosition + ")");
-                        drone.QueueMove(worldPoint);
-                        break;
+                case "move":
+                    Debug.Log("move(" + Input.mousePosition + ")");
+                    controller.PlayerDrone.QueueMove(worldPoint);
+                    break;
                 
-                    case "missile":
-                        Debug.Log("Missile(" + Input.mousePosition + ")");
-                        drone.QueueMissileAttack(worldPoint);
-                        break;
-                    case "kinetic":
-                        Debug.Log("Kinetic(" + Input.mousePosition + ")");
-                        drone.QueueKineticAttack(worldPoint);
-                        break;
-                    case "lazer":
-                        Debug.Log("lazer(" + Input.mousePosition + ")");
-                        drone.QueueLaserAttack(worldPoint);
-                        break;
-                    case "nextTurn":
-                        Debug.Log("nextTurn(" + Input.mousePosition + ")");
-                        drone.TakeNextAction();
-                        break;
-                    case "":
-                        Debug.Log("No button is selected / the button has no value, " + currentButton);
-                        break;
-                    default:
-                        Debug.Log("This button has not been implemented");
-                        break;
-                }
+                case "missile":
+                    Debug.Log("Missile(" + Input.mousePosition + ")");
+                    controller.PlayerDrone.QueueMissileAttack(worldPoint);
+                    break;
+                case "kinetic":
+                    Debug.Log("Kinetic(" + Input.mousePosition + ")");
+                    controller.PlayerDrone.QueueKineticAttack(worldPoint);
+                    break;
+                case "lazer":
+                    Debug.Log("lazer(" + Input.mousePosition + ")");
+                    controller.PlayerDrone.QueueLaserAttack(worldPoint);
+                    break;
+                case "nextTurn":
+                    Debug.Log("nextTurn(" + Input.mousePosition + ")");
+                    controller.AdvanceTurn();
+                    break;
+                case "":
+                    Debug.Log("No button is selected / the button has no value, " + currentButton);
+                    break;
+                default:
+                    Debug.Log("This button has not been implemented");
+                    break;
             }
         }
-        public void ButtonPress(String buttonType)
+        public void ButtonPress(string buttonType)
         {
             currentButton = buttonType;
         }

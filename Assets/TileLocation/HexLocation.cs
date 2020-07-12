@@ -21,7 +21,7 @@ namespace TileLocation
         // Top to bottom
         private int Z { get; }
 
-        public static Dictionary<HexDirection, HexLocation> DirectionMappings = 
+        public static readonly Dictionary<HexDirection, HexLocation> DirectionMappings = 
             new Dictionary<HexDirection, HexLocation>
             {
                 [HexDirection.TopRight] = new HexLocation(1, -1, 0),
@@ -32,17 +32,18 @@ namespace TileLocation
                 [HexDirection.TopLeft] = new HexLocation(0, 1, -1),
             };
         
-        public Vector3 GetPixelLocation() // returns the unity coordinate of the tile as a Vector2
+        public Vector3 GetPixelLocation()
         {
-            var xPos = (Z + (0.5 * X));
-            var yPos = (0.75 * X);
+            // Get Unity location vector
+            var xPos = (X + (0.5 * Z));
+            var yPos = -(0.75 * Z);
             return new Vector3((float)xPos, (float)yPos, 0f);
         }
 
         public static HexLocation FromPixels(Vector3 position)
         {
-            var x = (int) Math.Round(position.y / 0.75);
-            var z = (int) Math.Round(position.x - (0.5 * x));
+            var z = (int) Math.Round((-position.y) / 0.75);
+            var x = (int) Math.Round(position.x - (0.5 * z));
             var y = -x - z;
             return new HexLocation(x, y, z);
         }
@@ -66,7 +67,7 @@ namespace TileLocation
             return sector % 2 == 0 ? offset + angle : offset + sectorSize - angle;
         }
 
-        public int ToDistance()
+        private int ToDistance()
         {
             return (Math.Abs(X) + Math.Abs(Y) + Math.Abs(Z)) / 2;
         }
@@ -98,13 +99,14 @@ namespace TileLocation
             }
         }
 
-        public List<HexDirection> ShortestPath(HexLocation target)
+        public IEnumerable<HexDirection> ShortestPath(HexLocation target)
         {
             var cameFrom = new Dictionary<HexLocation, List<HexDirection>> {{this, new List<HexDirection>()}};
             var options = new List<(HexLocation, int)> {(this, 0)};
             while (options.Count > 0)
             {
                 var current = options.First().Item1;
+                options.RemoveAt(0);
                 var route = cameFrom[current];
 
                 if (current == target)
@@ -124,16 +126,32 @@ namespace TileLocation
             return new List<HexDirection>();
         }
 
-        private IEnumerable<(HexLocation, HexDirection)> Neighbours()
+        public IEnumerable<(HexLocation, HexDirection)> Neighbours()
         {
             var origin = new HexLocation(X, Y, Z);
             return DirectionMappings.
                 Select(neighbour => (neighbour.Value + origin, neighbour.Key));
         }
 
-        private HexLocation Copy()
+        private bool Equals(HexLocation other)
         {
-            return new HexLocation(X, Y, Z);
+            return X == other.X && Y == other.Y && Z == other.Z;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is HexLocation other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = X;
+                hashCode = (hashCode * 397) ^ Y;
+                hashCode = (hashCode * 397) ^ Z;
+                return hashCode;
+            }
         }
 
         public static HexLocation operator +(HexLocation a) => a;
@@ -144,8 +162,7 @@ namespace TileLocation
         public static HexLocation operator -(HexLocation a, HexLocation b) => 
             new HexLocation(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
 
-        public static Boolean operator ==(HexLocation a, HexLocation b) => 
-            a.X == b.X && a.Y == b.Y && a.Z == b.Z;
+        public static bool operator ==(HexLocation a, HexLocation b) => a.Equals(b);
         public static bool operator !=(HexLocation a, HexLocation b) => !(a == b);
     }
 }
