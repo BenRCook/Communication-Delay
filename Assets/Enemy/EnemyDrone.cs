@@ -25,7 +25,6 @@ namespace Enemy
 
         public override void LaserAttack(HexDirection direction)
         {
-            Facing = direction;
             GameController.GameController.Instance.Drones
                 .Where(drone => drone.Location.IsVisibleFrom(Location, direction))
                 .Where(drone => drone.Location.DistanceFrom(Location) < LaserRange)
