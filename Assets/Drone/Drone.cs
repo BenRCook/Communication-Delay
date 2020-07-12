@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Action;
 using TileLocation;
 using UnityEngine;
@@ -33,7 +34,7 @@ namespace Drone
 
         private void Update()
         {
-            if (ButtonController.Instance.currentButton == "lazer")
+            if (ButtonController.Instance.CurrentButton == "lazer")
             {
                 _laser.enabled = true;
                 var worldPoint = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
