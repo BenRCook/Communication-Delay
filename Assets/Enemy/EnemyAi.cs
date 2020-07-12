@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using Action;
 using Drone;
-using GameController;
 using TileLocation;
 using UnityEngine;
 
@@ -17,7 +16,7 @@ namespace Enemy
 
         public IAction ChooseAction(AbsDrone drone)
         {
-            var drones = new List<Drone.Drone>{GameController.GameController.Instance.PlayerDrone};
+            var drones = new List<Drone.Drone>{Common.GameController.Instance.PlayerDrone};
             var close = drones
                 .FirstOrDefault(other => other.Location.DistanceFrom(drone.Location) <= EnemyDrone.KineticRange);
             
