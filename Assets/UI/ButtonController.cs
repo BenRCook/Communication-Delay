@@ -2,40 +2,47 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Common;
 using UnityEngine;
 
 namespace UI
 {
+    public delegate void Action(Vector3 worldPoint);
     public class ButtonController : MonoBehaviour
     {
         public string currentButton;
-        
+        public Camera mainCamera;
+
+        public void Start()
+        {
+            mainCamera = Camera.main;
+        }
+
         public void Update()
         {
             if (!Input.GetMouseButtonDown(0)) return;
-            var controller = GameController.GameController.Instance;
-            var worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            var controller = Common.GameController.Instance;
             switch (currentButton)
             {
                 case "move":
                     Debug.Log("move(" + Input.mousePosition + ")");
-                    controller.PlayerDrone.QueueMove(worldPoint);
+                    AttemptAction(controller.PlayerDrone.QueueMove);
                     break;
-                
                 case "missile":
                     Debug.Log("Missile(" + Input.mousePosition + ")");
-                    controller.PlayerDrone.QueueMissileAttack(worldPoint);
+                    AttemptAction(controller.PlayerDrone.QueueMissileAttack);
                     break;
                 case "kinetic":
                     Debug.Log("Kinetic(" + Input.mousePosition + ")");
-                    controller.PlayerDrone.QueueKineticAttack(worldPoint);
+                    AttemptAction(controller.PlayerDrone.QueueKineticAttack);
                     break;
                 case "lazer":
                     Debug.Log("lazer(" + Input.mousePosition + ")");
-                    controller.PlayerDrone.QueueLaserAttack(worldPoint);
+                    AttemptAction(controller.PlayerDrone.QueueLaserAttack);
                     break;
                 case "nextTurn":
                     Debug.Log("nextTurn(" + Input.mousePosition + ")");
+                    ErrorDisplay.Instance.Message = "";
                     controller.AdvanceTurn();
                     break;
                 case "":
@@ -46,6 +53,21 @@ namespace UI
                     break;
             }
         }
+
+        private void AttemptAction(Action droneAction)
+        {
+            var worldPoint = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+            try
+            {
+                droneAction(worldPoint);
+                ErrorDisplay.Instance.Message = "";
+            }
+            catch (UserInputError e)
+            {
+                ErrorDisplay.Instance.Message = e.Message;
+            }
+        }
+        
         public void ButtonPress(string buttonType)
         {
             currentButton = buttonType;
