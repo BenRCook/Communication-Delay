@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using Action;
 using Drone;
-using GameController;
 using TileLocation;
 using UnityEngine;
 

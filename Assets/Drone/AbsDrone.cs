@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Action;
 using GameController;
-using JetBrains.Annotations;
 using TileLocation;
 using UnityEngine;
 
@@ -54,6 +52,10 @@ namespace Drone
         public void TakeDamage(int damage)
         {
             Health -= damage;
+            if (Health <= 0)
+            {
+                GameController.GameController.Instance.Kill(this);
+            }
         }
 
         public void PushAction(IAction action)

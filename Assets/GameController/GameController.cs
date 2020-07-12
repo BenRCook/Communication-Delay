@@ -11,6 +11,7 @@ namespace GameController
     {
         [SerializeField] protected GameObject playerDronePrefab;
         [SerializeField] protected GameObject enemyDronePrefab;
+        [SerializeField] protected GameObject deathParticlePrefab;
         
         public static GameController Instance { get; private set; }
 
@@ -72,6 +73,15 @@ namespace GameController
             
             // Drone takes turn
             CurrentDrone.TakeTurn();
+        }
+
+        public void Kill(AbsDrone drone)
+        {
+            var particleLocation = drone.Location.GetPixelLocation();
+            Drones = new Queue<AbsDrone>(Drones.Where(d => d != drone));
+            
+            Destroy(drone.gameObject);
+            Instantiate(deathParticlePrefab, particleLocation, Quaternion.identity);
         }
     }
 }
