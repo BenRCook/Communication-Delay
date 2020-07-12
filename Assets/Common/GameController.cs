@@ -5,13 +5,14 @@ using Enemy;
 using TileLocation;
 using UnityEngine;
 
-namespace GameController
+namespace Common
 {
     public class GameController : MonoBehaviour
     {
         [SerializeField] protected GameObject playerDronePrefab;
         [SerializeField] protected GameObject enemyDronePrefab;
         [SerializeField] protected GameObject deathParticlePrefab;
+        [SerializeField] private int turnCounter;
         
         public static GameController Instance { get; private set; }
 
@@ -31,7 +32,7 @@ namespace GameController
             }
         }
 
-        private void Start()
+        private void OnEnable()
         {
             // Cleanup (shouldn't be important)
             foreach (var drone in Drones)
@@ -44,7 +45,7 @@ namespace GameController
             // var hexLocation = new HexLocation(1, 1, -2);
             var playerLocation = hexLocation.GetPixelLocation();
             var playerPrefab = Instantiate(playerDronePrefab, playerLocation, Quaternion.identity);
-            PlayerDrone = playerPrefab.GetComponent<Drone.Drone>();
+            CurrentDrone = PlayerDrone = playerPrefab.GetComponent<Drone.Drone>();
             PlayerDrone.MoveTo(hexLocation);
             Drones = new Queue<AbsDrone>();
             Drones.Enqueue(PlayerDrone);
@@ -67,12 +68,20 @@ namespace GameController
 
         public void AdvanceTurn()
         {
+            // Drone takes turn
+            CurrentDrone.TakeTurn();
+            
             // Rotate drones and take next
             CurrentDrone = Drones.Dequeue();
             Drones.Enqueue(CurrentDrone);
-            
-            // Drone takes turn
-            CurrentDrone.TakeTurn();
+
+            // Spawn enemy sometimes
+            if (CurrentDrone != PlayerDrone) return;
+            turnCounter += 1;
+            if (turnCounter > 10 || turnCounter > 5 && turnCounter % 2 == 0 || turnCounter < 5 && turnCounter % 3 == 0)
+            {
+                SpawnEnemy();
+            }
         }
 
         public void Kill(AbsDrone drone)

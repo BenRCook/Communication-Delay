@@ -16,7 +16,7 @@ namespace Enemy
 
         public IAction ChooseAction(AbsDrone drone)
         {
-            var drones = new List<Drone.Drone>{GameController.GameController.Instance.PlayerDrone};
+            var drones = new List<Drone.Drone>{Common.GameController.Instance.PlayerDrone};
             var close = drones
                 .FirstOrDefault(other => other.Location.DistanceFrom(drone.Location) <= EnemyDrone.KineticRange);
             

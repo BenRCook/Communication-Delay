@@ -1,10 +1,18 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Action;
 using TileLocation;
+using UnityEngine;
 
 namespace Drone
 {
     public class Drone : AbsDrone
     {
+        [field: SerializeField] public override Queue<IAction> Actions { get; } = new Queue<IAction>(new []
+        {
+            new Wait(), new Wait(),
+        });
+        
         private const int MissileDamage = 10;
         private const int MissileRange = 10;
         private int _missileAmmo = 1;
@@ -22,7 +30,7 @@ namespace Drone
 
         public override void LaserAttack(HexDirection direction)
         {
-            GameController.GameController.Instance.Drones
+            Common.GameController.Instance.Drones
                 .Where(drone => drone.Location.IsVisibleFrom(Location, direction))
                 .Where(drone => drone.Location.DistanceFrom(Location) < LaserRange)
                 .ToList()

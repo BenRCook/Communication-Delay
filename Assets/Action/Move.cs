@@ -15,7 +15,7 @@ namespace Action
 
         public string GetDescription()
         {
-            return $"Move drone";
+            return $"Move";
         }
 
         public void TakeAction(AbsDrone drone)
