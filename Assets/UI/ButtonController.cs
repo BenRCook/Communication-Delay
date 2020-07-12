@@ -8,6 +8,7 @@ namespace UI
 {
     public class ButtonController : MonoBehaviour
     {
+        public static ButtonController Instance { get; private set; }
         public string currentButton;
         
         public void Update()
@@ -49,6 +50,17 @@ namespace UI
         public void ButtonPress(string buttonType)
         {
             currentButton = buttonType;
+        }
+        private void Awake()
+        {
+            if (Instance != null && Instance != this)
+            {
+                Destroy(gameObject);
+            }
+            else
+            {
+                Instance = this;
+            }
         }
     }
 
