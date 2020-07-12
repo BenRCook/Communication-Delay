@@ -943,7 +943,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f556fcd93f2c042408445109061eaee5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentButton: 
+  <CurrentButton>k__BackingField: 
 --- !u!4 &559729831
 Transform:
   m_ObjectHideFlags: 0
