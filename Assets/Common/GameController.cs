@@ -84,7 +84,7 @@ namespace Common
                     SpawnEnemy();
                 }
             }
-            else
+            else if (PlayerDrone != null)
             {
                 AdvanceTurn();
             }
@@ -94,7 +94,12 @@ namespace Common
         {
             var particleLocation = drone.Location.GetPixelLocation();
             Drones = new Queue<AbsDrone>(Drones.Where(d => d != drone));
-            
+
+            if (drone == PlayerDrone)
+            {
+                PlayerDrone = null;
+            }
+
             Destroy(drone.gameObject);
             Instantiate(deathParticlePrefab, particleLocation, Quaternion.identity);
         }
