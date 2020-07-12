@@ -13,6 +13,7 @@ namespace UI
 
         public string Message
         {
+            get => _message;
             set
             {
                 _message = value;
