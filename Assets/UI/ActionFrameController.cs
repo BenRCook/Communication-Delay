@@ -17,7 +17,6 @@ namespace UI
             GameObject.Find("Action Frame 1").GetComponentInChildren<Text>().text = Actions[0].GetDescription();
             GameObject.Find("Action Frame 2").GetComponentInChildren<Text>().text = Actions[1].GetDescription();
             GameObject.Find("Action Frame 3").GetComponentInChildren<Text>().text = Actions[2].GetDescription();
-
         }
 
         
