@@ -4,6 +4,7 @@ using Action;
 using GameController;
 using JetBrains.Annotations;
 using TileLocation;
+using UI;
 using UnityEngine;
 
 namespace Drone
@@ -14,6 +15,7 @@ namespace Drone
         [field: SerializeField] public HexDirection Facing { get; protected set; }
         [field: SerializeField] public HexLocation Location { get; protected set; }
         [field: SerializeField] public Queue<IAction> Actions { get; } = new Queue<IAction>();
+        
 
         public abstract void MoveTo(HexLocation newLocation);
         public void QueueMove(Vector3 mouseLocation)
@@ -59,6 +61,7 @@ namespace Drone
         public void PushAction(IAction action)
         {
             Actions.Enqueue(action);
+            ActionFrameController.Instance.UpdateFrames();
         }
 
         public void TakeNextAction()
