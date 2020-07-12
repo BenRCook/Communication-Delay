@@ -12,6 +12,8 @@ namespace Enemy
         public static int KineticRange { get; } = 3;
         public static int MoveLimit { get; } = 3;
 
+        public override int Health { get; protected set; } = 1;
+
         private void Start()
         {
             droneAi = gameObject.AddComponent<EnemyAi>();

@@ -112,8 +112,7 @@ namespace TileLocation
                     return route;
                 }
 
-                var walkableNeighbours = current.Neighbours()
-                    .Where(t => Utilities.Instance.IsTileWalkable(t.Item1));
+                var walkableNeighbours = current.Neighbours();
                 foreach (var (next, direction) in walkableNeighbours)
                 {
                     var nextRoute = route.Append(direction).ToList();

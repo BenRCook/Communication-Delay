@@ -1035,7 +1035,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerDronePrefab: {fileID: 8970167628675797272, guid: a9cbc3232fa60604bb912b1b1d9fee57, type: 3}
   enemyDronePrefab: {fileID: 607578449887199601, guid: 8e19d0255c9cf7a4a98c1b4af710f70a, type: 3}
-  deathParticlePrefab: {fileID: 0}
+  deathParticlePrefab: {fileID: 7439093329066298397, guid: aa2c4efe31d7957459cf00abaff5540a, type: 3}
   turnCounter: 0
 --- !u!4 &796433256
 Transform:
