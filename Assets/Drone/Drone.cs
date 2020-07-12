@@ -1,7 +1,5 @@
 ﻿using System.Linq;
 using TileLocation;
-using UnityEngine;
-using UnityEngine.Tilemaps;
 
 namespace Drone
 {
@@ -15,15 +13,6 @@ namespace Drone
         private const int KineticDamage = 10;
         private const int KineticRange = 3;
 
-        private AbsDrone[] _drones;
-        
-
-        private void Start()
-        {
-            _drones = FindObjectsOfType<AbsDrone>();
-            // MoveTo(new HexLocation(-2, -1, +3));
-        }
-        
         public override void MoveTo(HexLocation newLocation)
         {
             Location = newLocation;
@@ -33,9 +22,8 @@ namespace Drone
 
         public override void LaserAttack(HexDirection direction)
         {
-            _drones = FindObjectsOfType<AbsDrone>();
             Facing = direction;
-            _drones
+            GameController.GameController.Instance.Drones
                 .Where(drone => drone.Location.IsVisibleFrom(Location, direction))
                 .Where(drone => drone.Location.DistanceFrom(Location) < LaserRange)
                 .ToList()
@@ -60,7 +48,10 @@ namespace Drone
                 target.TakeDamage(MissileDamage);
             }
         }
-        
-        
+
+        public override void TakeTurn()
+        {
+            TakeNextAction();
+        }
     }
 }

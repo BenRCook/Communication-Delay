@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Action;
+using GameController;
 using JetBrains.Annotations;
 using TileLocation;
 using UnityEngine;
@@ -9,7 +10,7 @@ namespace Drone
 {
     public abstract class AbsDrone : MonoBehaviour
     {
-        [field: SerializeField] public int Health { get; protected set; }
+        [field: SerializeField] public int Health { get; protected set; } = 10;
         [field: SerializeField] public HexDirection Facing { get; protected set; }
         [field: SerializeField] public HexLocation Location { get; protected set; }
         [field: SerializeField] private Queue<IAction> Actions { get; } = new Queue<IAction>();
@@ -30,7 +31,7 @@ namespace Drone
         public void QueueKineticAttack(Vector3 mouseLocation)
         {
             var tile = HexLocation.FromPixels(mouseLocation);
-            var drone = FindDroneOnTile(tile);
+            var drone = Utilities.FindDroneOnTile(tile);
             if (drone is null)
             {
                 throw new MissingComponentException("Drone not found");
@@ -42,7 +43,7 @@ namespace Drone
         public void QueueMissileAttack(Vector3 mouseLocation)
         {
             var tile = HexLocation.FromPixels(mouseLocation);
-            var drone = FindDroneOnTile(tile);
+            var drone = Utilities.FindDroneOnTile(tile);
             if (drone is null)
             {
                 throw new MissingComponentException("Drone not found");
@@ -65,11 +66,6 @@ namespace Drone
             Actions.Dequeue().TakeAction(this);
         }
 
-        [CanBeNull]
-        private AbsDrone FindDroneOnTile(HexLocation tile)
-        {
-            return FindObjectsOfType<AbsDrone>()
-                .First(drone => drone.Location == tile);
-        }
+        public abstract void TakeTurn();
     }
 }
