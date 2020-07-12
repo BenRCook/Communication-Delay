@@ -11,7 +11,8 @@ namespace GameController
     {
         [SerializeField] protected GameObject playerDronePrefab;
         [SerializeField] protected GameObject enemyDronePrefab;
-        
+        [SerializeField] private int turnCounter;
+
         public static GameController Instance { get; private set; }
 
         public Queue<AbsDrone> Drones { get; private set; } = new Queue<AbsDrone>();
@@ -66,9 +67,19 @@ namespace GameController
 
         public void AdvanceTurn()
         {
+            
             // Rotate drones and take next
             CurrentDrone = Drones.Dequeue();
             Drones.Enqueue(CurrentDrone);
+
+            if (CurrentDrone == PlayerDrone)
+            {
+                turnCounter += 1;
+                if (turnCounter > 10 || turnCounter > 5 && turnCounter % 2 == 0 || turnCounter < 5 && turnCounter % 3 == 0)
+                {
+                    SpawnEnemy();
+                }
+            }
             
             // Drone takes turn
             CurrentDrone.TakeTurn();
