@@ -14,12 +14,12 @@ namespace Action
 
         public string GetDescription()
         {
-            return $"Shoot laser at target";
+            return $"Kinetic";
         }
 
         public void TakeAction(AbsDrone drone)
         {
-            drone.MissileAttack(_target);
+            drone.KineticAttack(_target);
         }
 
         public Color GetBackgroundColor()

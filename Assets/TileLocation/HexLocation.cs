@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Common;
 using UnityEngine;
 
 namespace TileLocation
@@ -111,7 +112,9 @@ namespace TileLocation
                     return route;
                 }
 
-                foreach (var (next, direction) in current.Neighbours())
+                var walkableNeighbours = current.Neighbours()
+                    .Where(t => Utilities.Instance.IsTileWalkable(t.Item1));
+                foreach (var (next, direction) in walkableNeighbours)
                 {
                     var nextRoute = route.Append(direction).ToList();
                     if (cameFrom.ContainsKey(next) && nextRoute.Count >= cameFrom[next].Count) continue;

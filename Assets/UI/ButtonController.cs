@@ -1,56 +1,110 @@
-﻿using Drone;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using Action;
+using Common;
 using UnityEngine;
 
 namespace UI
 {
+    public delegate IAction ActionCreator(Vector3 worldPoint);
     public class ButtonController : MonoBehaviour
     {
-        public static ButtonController Instance { get; private set; }
-        public string currentButton;
+        [SerializeField] private string currentButton;
+        private Camera _mainCamera;
+        private IAction _nextAction;
+
+        private IAction Action
+        {
+            get => _nextAction;
+            set
+            {
+                _nextAction = value;
+                ActionFrameController.Instance.UpdateFrames();
+            }
+        }
+
+        public string NextAction => Action is null ? "" : Action.GetDescription();
         
+        public static ButtonController Instance { get; private set; }
+
+        public void Start()
+        {
+            _mainCamera = Camera.main;
+        }
+
         public void Update()
         {
             if (!Input.GetMouseButtonDown(0)) return;
-            var controller = GameController.GameController.Instance;
-            var worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            var controller = GameController.Instance;
             switch (currentButton)
             {
                 case "move":
-                    Debug.Log("move(" + Input.mousePosition + ")");
-                    controller.PlayerDrone.QueueMove(worldPoint);
+                    currentButton = "";
+                    AttemptCreate(ActionBuilder.MakeMove);
                     break;
-                
                 case "missile":
-                    Debug.Log("Missile(" + Input.mousePosition + ")");
-                    controller.PlayerDrone.QueueMissileAttack(worldPoint);
+                    currentButton = "";
+                    AttemptCreate(ActionBuilder.MakeMissileAttack);
                     break;
                 case "kinetic":
-                    Debug.Log("Kinetic(" + Input.mousePosition + ")");
-                    controller.PlayerDrone.QueueKineticAttack(worldPoint);
+                    currentButton = "";
+                    AttemptCreate(ActionBuilder.MakeKineticAttack);
                     break;
                 case "lazer":
-                    Debug.Log("lazer(" + Input.mousePosition + ")");
-                    controller.PlayerDrone.QueueLaserAttack(worldPoint);
-                    break;
-                case "nextTurn":
-                    Debug.Log("nextTurn(" + Input.mousePosition + ")");
-                    controller.AdvanceTurn();
-                    break;
-                case "":
-                    Debug.Log("No button is selected / the button has no value, " + currentButton);
-                    break;
-                default:
-                    Debug.Log("This button has not been implemented");
+                    currentButton = "";
+                    var worldPoint = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
+                    Action = new LaserAttack(controller.PlayerDrone.Location.NearestDirection(worldPoint));
                     break;
             }
         }
+
+        private void AttemptCreate(ActionCreator creator)
+        {
+            var worldPoint = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
+            try
+            {
+                Action = creator(worldPoint);
+                ErrorDisplay.Instance.Message = "";
+            }
+            catch (UserInputError e)
+            {
+                ErrorDisplay.Instance.Message = e.Message;
+            }
+        }
+
+        public void NextTurn()
+        {
+            var controller = GameController.Instance;
+            currentButton = "";
+            ErrorDisplay.Instance.Message = "";
+            if (controller.CurrentDrone == controller.PlayerDrone)
+            {
+                PlayerTurn();
+            }
+            else
+            {
+                controller.AdvanceTurn();
+            }
+        }
+
+        private void PlayerTurn()
+        {
+            var controller = GameController.Instance;
+            if (Action is null)
+            {
+                ErrorDisplay.Instance.Message = "Choose an action before advancing turn";
+                return;
+            }
+            controller.PlayerDrone.PushAction(Action);
+            Action = null;
+            ErrorDisplay.Instance.Message = "";
+            controller.AdvanceTurn();
+            ActionFrameController.Instance.UpdateFrames();
+        }
+        
         public void ButtonPress(string buttonType)
         {
             currentButton = buttonType;
         }
+        
         private void Awake()
         {
             if (Instance != null && Instance != this)
