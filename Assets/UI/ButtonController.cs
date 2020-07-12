@@ -42,6 +42,7 @@ namespace UI
                     break;
                 case "nextTurn":
                     Debug.Log("nextTurn(" + Input.mousePosition + ")");
+                    ErrorDisplay.Instance.Message = "";
                     controller.AdvanceTurn();
                     break;
                 case "":
