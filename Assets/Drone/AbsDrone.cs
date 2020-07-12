@@ -4,6 +4,7 @@ using Action;
 using Common;
 using JetBrains.Annotations;
 using TileLocation;
+using UI;
 using UnityEngine;
 
 namespace Drone
@@ -13,46 +14,17 @@ namespace Drone
         [field: SerializeField] public int Health { get; protected set; } = 10;
         [field: SerializeField] public HexDirection Facing { get; protected set; }
         [field: SerializeField] public HexLocation Location { get; protected set; }
-        [field: SerializeField] private Queue<IAction> Actions { get; } = new Queue<IAction>();
+        [field: SerializeField] public virtual Queue<IAction> Actions { get; } = new Queue<IAction>();
+        
 
         public abstract void MoveTo(HexLocation newLocation);
-        public void QueueMove(Vector3 mouseLocation)
-        {
-            var hex = HexLocation.FromPixels(mouseLocation);
-            if (!Utilities.Instance.IsTileWalkable(hex))
-                throw new UserInputError("Tile is inaccessible!");
-            PushAction(new Move(hex));
-        }
 
         public abstract void LaserAttack(HexDirection direction);
-        public void QueueLaserAttack(Vector3 mouseLocation)
-        {
-            PushAction(new LaserAttack(Location.NearestDirection(mouseLocation)));
-        }
 
         public abstract void KineticAttack(AbsDrone target);
-        public void QueueKineticAttack(Vector3 mouseLocation)
-        {
-            var tile = HexLocation.FromPixels(mouseLocation);
-            var drone = Utilities.FindDroneOnTile(tile);
-            if (drone is null)
-            {
-                throw new UserInputError("Drone not found on that tile");
-            }
-            PushAction(new KineticAttack(drone));
-        }
-        
+
         public abstract void MissileAttack(AbsDrone target);
-        public void QueueMissileAttack(Vector3 mouseLocation)
-        {
-            var tile = HexLocation.FromPixels(mouseLocation);
-            var drone = Utilities.FindDroneOnTile(tile);
-            if (drone is null)
-            {
-                throw new UserInputError("Drone not found on that tile");
-            }
-            PushAction(new MissileAttack(drone));
-        }
+        
 
         public void TakeDamage(int damage)
         {
@@ -62,6 +34,7 @@ namespace Drone
         public void PushAction(IAction action)
         {
             Actions.Enqueue(action);
+            ActionFrameController.Instance.UpdateFrames();
         }
 
         public void TakeNextAction()

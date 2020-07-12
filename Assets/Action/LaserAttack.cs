@@ -15,7 +15,7 @@ namespace Action
 
         public string GetDescription()
         {
-            return $"Shoot laser in direction";
+            return $"Laser";
         }
 
         public void TakeAction(AbsDrone drone)
