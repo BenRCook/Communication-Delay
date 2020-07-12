@@ -5,7 +5,7 @@ using Enemy;
 using TileLocation;
 using UnityEngine;
 
-namespace GameController
+namespace Common
 {
     public class GameController : MonoBehaviour
     {

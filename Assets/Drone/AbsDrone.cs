@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Action;
-using GameController;
+using Common;
 using JetBrains.Annotations;
 using TileLocation;
 using UI;
@@ -20,7 +20,10 @@ namespace Drone
         public abstract void MoveTo(HexLocation newLocation);
         public void QueueMove(Vector3 mouseLocation)
         {
-            PushAction(new Move(HexLocation.FromPixels(mouseLocation)));
+            var hex = HexLocation.FromPixels(mouseLocation);
+            if (!Utilities.Instance.IsTileWalkable(hex))
+                throw new UserInputError("Tile is inaccessible!");
+            PushAction(new Move(hex));
         }
 
         public abstract void LaserAttack(HexDirection direction);
@@ -36,7 +39,7 @@ namespace Drone
             var drone = Utilities.FindDroneOnTile(tile);
             if (drone is null)
             {
-                throw new MissingComponentException("Drone not found");
+                throw new UserInputError("Drone not found on that tile");
             }
             PushAction(new KineticAttack(drone));
         }
@@ -48,7 +51,7 @@ namespace Drone
             var drone = Utilities.FindDroneOnTile(tile);
             if (drone is null)
             {
-                throw new MissingComponentException("Drone not found");
+                throw new UserInputError("Drone not found on that tile");
             }
             PushAction(new MissileAttack(drone));
         }
