@@ -133,6 +133,13 @@ namespace TileLocation
                 Select(neighbour => (neighbour.Value + origin, neighbour.Key));
         }
 
+        public HexLocation DrawLineTo(Vector3 mousePosition, int length)
+        {
+            var direction = NearestDirection(mousePosition);
+            var offset = DirectionMappings[direction] * length;
+            return this + offset;
+        }
+
         private bool Equals(HexLocation other)
         {
             return X == other.X && Y == other.Y && Z == other.Z;
@@ -161,6 +168,9 @@ namespace TileLocation
             new HexLocation(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
         public static HexLocation operator -(HexLocation a, HexLocation b) => 
             new HexLocation(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
+        
+        public static HexLocation operator *(HexLocation a, int b) =>
+            new HexLocation(a.X * b, a.Y * b, a.Z * b);
 
         public static bool operator ==(HexLocation a, HexLocation b) => a.Equals(b);
         public static bool operator !=(HexLocation a, HexLocation b) => !(a == b);
