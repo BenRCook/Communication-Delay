@@ -20,6 +20,7 @@ namespace Drone
         private const int LaserRange = 10;
         private const int KineticDamage = 10;
         private const int KineticRange = 3;
+        public override int Health { get; protected set; } = 30;
 
         public override void MoveTo(HexLocation newLocation)
         {
