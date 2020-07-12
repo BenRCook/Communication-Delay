@@ -31,7 +31,7 @@ namespace GameController
             }
         }
 
-        private void Start()
+        private void OnEnable()
         {
             // Cleanup (shouldn't be important)
             foreach (var drone in Drones)

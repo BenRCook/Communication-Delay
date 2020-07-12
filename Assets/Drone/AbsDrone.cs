@@ -13,7 +13,7 @@ namespace Drone
         [field: SerializeField] public int Health { get; protected set; } = 10;
         [field: SerializeField] public HexDirection Facing { get; protected set; }
         [field: SerializeField] public HexLocation Location { get; protected set; }
-        [field: SerializeField] private Queue<IAction> Actions { get; } = new Queue<IAction>();
+        [field: SerializeField] public Queue<IAction> Actions { get; } = new Queue<IAction>();
 
         public abstract void MoveTo(HexLocation newLocation);
         public void QueueMove(Vector3 mouseLocation)
