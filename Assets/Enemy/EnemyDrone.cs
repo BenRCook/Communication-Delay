@@ -1,39 +1,32 @@
 ﻿using System.Linq;
+using Drone;
 using TileLocation;
-using UnityEngine;
-using UnityEngine.Tilemaps;
 
-namespace Drone
+namespace Enemy
 {
-    public class Drone : AbsDrone
+    public class EnemyDrone : AbsDrone
     {
-        private const int MissileDamage = 10;
-        private const int MissileRange = 10;
-        private int _missileAmmo = 1;
         private const int LaserDamage = 10;
-        private const int LaserRange = 10;
+        public static int LaserRange { get; } = 10;
         private const int KineticDamage = 10;
-        private const int KineticRange = 3;
+        public static int KineticRange { get; } = 3;
+        public static int MoveLimit { get; } = 3;
 
         private AbsDrone[] _drones;
-        
 
         private void Start()
         {
             _drones = FindObjectsOfType<AbsDrone>();
-            // MoveTo(new HexLocation(-2, -1, +3));
         }
         
         public override void MoveTo(HexLocation newLocation)
         {
             Location = newLocation;
             transform.position = newLocation.GetPixelLocation();
-           
         }
 
         public override void LaserAttack(HexDirection direction)
         {
-            _drones = FindObjectsOfType<AbsDrone>();
             Facing = direction;
             _drones
                 .Where(drone => drone.Location.IsVisibleFrom(Location, direction))
@@ -50,17 +43,6 @@ namespace Drone
             }
         }
 
-        public override void MissileAttack(AbsDrone target)
-        {
-            if (_missileAmmo <= 0) return;
-
-            _missileAmmo -= 1;
-            if (target.Location.DistanceFrom(Location) < MissileRange)
-            {
-                target.TakeDamage(MissileDamage);
-            }
-        }
-        
-        
+        public override void MissileAttack(AbsDrone target) { }
     }
 }

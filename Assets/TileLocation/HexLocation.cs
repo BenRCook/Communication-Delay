@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace TileLocation
@@ -19,6 +21,17 @@ namespace TileLocation
         // Top to bottom
         private int Z { get; }
 
+        public static Dictionary<HexDirection, HexLocation> DirectionMappings = 
+            new Dictionary<HexDirection, HexLocation>
+            {
+                [HexDirection.TopRight] = new HexLocation(1, -1, 0),
+                [HexDirection.Right] = new HexLocation(1, 0, -1),
+                [HexDirection.BottomRight] = new HexLocation(0, -1, 1),
+                [HexDirection.BottomLeft] = new HexLocation(-1, 0, 1),
+                [HexDirection.Left] = new HexLocation(-1, 1, 0),
+                [HexDirection.TopLeft] = new HexLocation(0, 1, -1),
+            };
+        
         public Vector3 GetPixelLocation() // returns the unity coordinate of the tile as a Vector2
         {
             var xPos = (Z + (0.5 * X));
@@ -83,6 +96,44 @@ namespace TileLocation
                     // Should never happen
                     throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
             }
+        }
+
+        public List<HexDirection> ShortestPath(HexLocation target)
+        {
+            var cameFrom = new Dictionary<HexLocation, List<HexDirection>> {{this, new List<HexDirection>()}};
+            var options = new List<(HexLocation, int)> {(this, 0)};
+            while (options.Count > 0)
+            {
+                var current = options.First().Item1;
+                var route = cameFrom[current];
+
+                if (current == target)
+                {
+                    return route;
+                }
+
+                foreach (var (next, direction) in current.Neighbours())
+                {
+                    var nextRoute = route.Append(direction).ToList();
+                    if (cameFrom.ContainsKey(next) && nextRoute.Count >= cameFrom[next].Count) continue;
+                    cameFrom[next] = nextRoute;
+                    options.Add((next, nextRoute.Count + next.DistanceFrom(target)));
+                    options.Sort((a, b) => a.Item2.CompareTo(b.Item2));
+                }
+            }
+            return new List<HexDirection>();
+        }
+
+        private IEnumerable<(HexLocation, HexDirection)> Neighbours()
+        {
+            var origin = new HexLocation(X, Y, Z);
+            return DirectionMappings.
+                Select(neighbour => (neighbour.Value + origin, neighbour.Key));
+        }
+
+        private HexLocation Copy()
+        {
+            return new HexLocation(X, Y, Z);
         }
 
         public static HexLocation operator +(HexLocation a) => a;
